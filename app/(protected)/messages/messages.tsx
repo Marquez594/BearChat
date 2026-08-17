@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import Pfp from "@/public/defaultpfp.jpg"
 
 export default function MessagesArea() {
   const router = useRouter();
@@ -67,7 +68,7 @@ export default function MessagesArea() {
               >
                 <div className="relative h-12 w-12 rounded-full overflow-hidden shrink-0">
                   <Image
-                    src={conversation.otherUser.pfp}
+                    src={conversation.otherUser.pfp || Pfp}
                     alt=""
                     fill
                     className="object-cover"
