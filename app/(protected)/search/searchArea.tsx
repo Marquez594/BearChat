@@ -38,15 +38,15 @@ export default function SearchArea() {
     fetchUsers();
   }
 
-  function displayUser(user: string) {
+  function displayUser(userid: string) {
     const params = new URLSearchParams();
-    params.set("User", user);
+    params.set("User", userid);
     router.push(`/search?${params.toString()}`);
   }
 
   return (
     <div
-      className={`flex flex-col flex-1 bg-[#ffffff] ${searchArea ? "h-full" : "h-fit"} rounded-t-xl mt-auto`}
+      className={`flex flex-col flex-2 md:flex-3 bg-[#ffffff] ${searchArea ? "h-full" : "h-fit"} rounded-t-xl mt-auto`}
     >
       {/**Search Area*/}
       <button
@@ -67,7 +67,7 @@ export default function SearchArea() {
         )}
       </button>
       {searchArea && (
-        <div className="flex-1 text-black p-2 flex flex-col gap-5 border ">
+        <div className="flex-1 text-black p-2 flex flex-col gap-5  ">
           <form className="relative" onSubmit={handleSearchSubmit}>
             <input
               className="w-full bg-gray-200 rounded-md p-2 pr-10"
@@ -81,7 +81,7 @@ export default function SearchArea() {
               className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-700"
             ></FontAwesomeIcon>
           </form>
-          <div className=" flex-1 flex flex-col items-center justify-center">
+          <div className=" flex-1 flex flex-col items-center justify-center  overflow-y-scroll">
             {searchResults.length == 0 ? (
               <div className="flex flex-col h-fit w-2/3 items-center gap-2 text-gray-600">
                 <FontAwesomeIcon
@@ -97,11 +97,11 @@ export default function SearchArea() {
                 {searchResults.map((user) => (
                   <button
                     key={user.uid}
-                    onClick={() => displayUser(user.username)}
+                    onClick={() => displayUser(user.uid)}
                     className="flex p-2 border-b-2 border-gray-400 items-center gap-2 w-full hover:cursor-pointer"
                   >
                     <Image
-                      src={Pfp}
+                      src={ user.pfp || Pfp}
                       height={35}
                       width={35}
                       className="rounded-full"

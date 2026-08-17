@@ -1,7 +1,7 @@
 "use client";
 
 import { supabase } from "@/lib/supabase";
-import { SearchUserType } from "@/lib/types";
+import { FriendRequestsType, SearchUserType } from "@/lib/types";
 import {
   faMinus,
   faPlus,
@@ -14,37 +14,49 @@ import Image from "next/image";
 import Pfp from "@/public/defaultpfp.jpg";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useQuery } from "@tanstack/react-query";
 
 export default function FriendArea() {
   const [friendArea, setFriendArea] = useState<boolean>(true);
   const [search, setSearch] = useState<string>("");
-  const [searchResults, setSearchResults] = useState<SearchUserType[]>([]);
+  const [searchQuery, setSearchQuery] = useState<string>("");
   const router = useRouter();
 
   function handleSearchSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (search == "") {
-      setSearchResults([]);
-      return;
-    }
-    const fetchFriendSearch = async () => {
-      const { data, error } = await supabase
-        .from("users")
-        .select("uid,username,pfp,status")
-        .ilike("username", `${search}%`);
-      if (!error) {
-        setSearchResults(data);
+    setSearchQuery(search);
+  }
+
+  const {
+    data: friendRequests = [],
+    isLoading: requestsLoading,
+    error: requestError,
+  } = useQuery({
+    queryKey: ["friendRequest"],
+    queryFn: async () => {
+      const res = await fetch("/api/users/getFriends", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error);
       }
-    };
-    fetchFriendSearch();
-  }
+      return data as FriendRequestsType[];
+    },
+  });
 
-  function displayUser(user: string) {
+  function displayUser(userid: string) {
     const params = new URLSearchParams();
-    params.set("User", user);
-    router.push(`/search?${params.toString()}`);
+    params.set("friend", userid);
+    router.push(`/contacts?${params.toString()}`);
   }
 
+  const filteredResults = friendRequests.filter((user) =>
+    user.friend.username.toLowerCase().includes(searchQuery.toLowerCase()),
+  );
   return (
     <div
       className={`flex flex-col flex-1 bg-[#ffffff] ${friendArea ? "h-full" : "h-fit"} rounded-t-xl mt-auto`}
@@ -68,7 +80,7 @@ export default function FriendArea() {
         )}
       </button>
       {friendArea && (
-        <div className="flex-1 text-black p-2 flex flex-col gap-5 border ">
+        <div className="flex-1 text-black p-2 flex flex-col gap-5">
           <form className="relative" onSubmit={handleSearchSubmit}>
             <input
               className="w-full bg-gray-200 rounded-md p-2 pr-10"
@@ -82,8 +94,8 @@ export default function FriendArea() {
               className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-700"
             ></FontAwesomeIcon>
           </form>
-          <div className=" flex-1 flex flex-col items-center justify-center">
-            {searchResults.length == 0 ? (
+          <div className=" flex-1 flex flex-col items-center justify-center overflow-y-scroll">
+            {filteredResults.length == 0 ? (
               <div className="flex flex-col h-fit w-2/3 items-center gap-2 text-gray-600">
                 <FontAwesomeIcon
                   icon={faUser}
@@ -95,21 +107,26 @@ export default function FriendArea() {
                 </Link>
               </div>
             ) : (
-              <div className=" h-full w-full">
-                {searchResults.map((user) => (
+              <div className=" h-full w-full overflow-y-auto">
+                {filteredResults.map((user) => (
                   <button
-                    key={user.uid}
-                    onClick={() => displayUser(user.username)}
+                    key={user.friend.uid}
+                    onClick={() => displayUser(user.friend.uid)}
                     className="flex p-2 border-b-2 border-gray-400 items-center gap-2 w-full hover:cursor-pointer"
                   >
-                    <Image
-                      src={Pfp}
-                      height={35}
-                      width={35}
-                      className="rounded-full"
-                      alt={`${user.username}'s profile picture`}
-                    ></Image>
-                    <h1>{user.username}</h1>
+                    <div className="relative h-fit">
+                      <Image
+                        src={user.friend.pfp || Pfp}
+                        height={35}
+                        width={35}
+                        className="rounded-full"
+                        alt={`${user.friend.username}'s profile picture`}
+                      ></Image>
+                      <div
+                        className={`absolute h-3 w-3 -right-1 bottom-px rounded-full ${user?.friend?.status == "Online" ? "bg-green-500" : user?.friend?.status == "Offline" ? "bg-gray-400" : user?.friend?.status == "Away" ? "bg-yellow-400" : null}`}
+                      ></div>
+                    </div>
+                    <h1>{user.friend.username}</h1>
                   </button>
                 ))}
               </div>

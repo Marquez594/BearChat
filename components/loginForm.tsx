@@ -19,6 +19,7 @@ async function loginUser(data: LoginType) {
     },
     body: JSON.stringify(data),
   });
+  console.log("Fetching user");
   if (!res.ok) {
     const err = await res.json();
     return new Error(err.error || "Bad");
@@ -51,7 +52,7 @@ export default function LoginForm() {
 
   return (
     <form
-      className="bg-[#394130] w-1/4 h-1/2 rounded-xl py-10 p-2 flex flex-col items-center gap-5"
+      className="bg-[#394130] lg:w-1/4 md:w-3/8 w-9/10 sm:w-1/2 h-fit rounded-xl py-10 p-2 flex flex-col items-center gap-5"
       onSubmit={handleFormSubmit}
     >
       <h1 className=" text-2xl font-bold font-mono">Login</h1>
@@ -83,7 +84,7 @@ export default function LoginForm() {
         </button>
       </div>
 
-      <h2 className="text-sm">
+      <h2 className="text-sm text-center">
         Don't have an account?{" "}
         <Link href="/signup" className="underline">
           Create One

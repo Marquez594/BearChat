@@ -1,29 +1,12 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { createServerClient } from "@supabase/ssr";
+import { createClient } from "@/lib/server";
 
 export async function POST(req: Request) {
+  console.log("hello");
+  const supabase = await createClient();
   const { username, password } = await req.json();
-
-  const cookieStore = await cookies();
-
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        get(name) {
-          return cookieStore.get(name)?.value;
-        },
-        set(name, value, options) {
-          cookieStore.set(name, value, options);
-        },
-        remove(name, options) {
-          cookieStore.set(name, "", { ...options, maxAge: 0 });
-        },
-      },
-    },
-  );
 
   const email = `${username}@app.local`;
 
@@ -33,8 +16,11 @@ export async function POST(req: Request) {
   });
 
   if (loginError) {
-    return NextResponse.json({ error: loginError.message }, { status: 400 });
+    console.log("Login error:", loginError.message);
+    return Response.json({ error: loginError.message }, { status: 400 });
   }
 
-  return NextResponse.json({ success: true, user: data.user }, { status: 200 });
+  console.log("Logged in user:", data.user.id);
+
+  return Response.json({ success: true, user: data.user }, { status: 200 });
 }

@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/server";
 import { faMessage, faPhone, faVideo } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Link from "next/link";
 
 export default async function Home() {
   const supabase = await createClient();
@@ -23,32 +24,41 @@ export default async function Home() {
   }
 
   return (
-    <div className="flex flex-col flex-1 items-center justify-center font-sans bg-[#1c2626] gap-8 h-full">
+    <div className="flex flex-col p-4 flex-1 items-center justify-center font-sans bg-[#1c2626] gap-8 h-full lg:w-full border">
       <div>
-        <h1 className="text-4xl">Welcome, {profile?.username}</h1>
-        <h1 className="text-xl">
+        <h1 className="text-3xl md:text-4xl">Welcome, {profile?.username}</h1>
+        <h1 className="md:text-xl text-md">
           Start by messaging or calling a friend by selecting one of the options
           below
         </h1>
       </div>
-      <div className="w-1/3 flex gap-4 h-fit">
-        <div className="flex-1">
+      <div className="w-fit flex gap-4 h-fit justify-evenly ">
+        <div className="">
           {/**Video */}
-          <button className="w-20 h-20 border-white border rounded-full hover:cursor-pointer">
+          <Link
+            href={"/calls"}
+            className="flex items-center justify-center w-20 h-20 border-white border rounded-full hover:cursor-pointer"
+          >
             <FontAwesomeIcon icon={faVideo} size="lg"></FontAwesomeIcon>
-          </button>
+          </Link>
         </div>
-        <div className="flex-1">
+        <div className="">
           {/**Phone */}
-          <button className="w-20 h-20 border-white border rounded-full hover:cursor-pointer">
+          <Link
+            href={"/calls"}
+            className="flex items-center justify-center w-20 h-20 border-white border rounded-full hover:cursor-pointer"
+          >
             <FontAwesomeIcon icon={faPhone} size="lg"></FontAwesomeIcon>
-          </button>
+          </Link>
         </div>
-        <div className="flex-1">
+        <div className="">
           {/**Message */}
-          <button className="w-20 h-20 border-white border rounded-full hover:cursor-pointer">
+          <Link
+            href={"/messages"}
+            className="flex items-center justify-center w-20 h-20 border-white border rounded-full hover:cursor-pointer"
+          >
             <FontAwesomeIcon icon={faMessage} size="lg"></FontAwesomeIcon>
-          </button>
+          </Link>
         </div>
       </div>
     </div>

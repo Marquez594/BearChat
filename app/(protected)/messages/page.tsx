@@ -1,7 +1,11 @@
+import ConversationArea from "./conversationArea";
+import MessagesArea from "./messages";
+
 export default function Messages() {
   return (
-    <div>
-      <h1>Messages</h1>
+    <div className="flex h-screen px-4 gap-4 pt-4">
+      <MessagesArea></MessagesArea>
+      <ConversationArea></ConversationArea>
     </div>
   );
 }

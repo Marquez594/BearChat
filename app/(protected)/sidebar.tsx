@@ -24,26 +24,41 @@ export default async function SideBar({ user }: any) {
   }
 
   return (
-    <nav className="bg-[#006241] flex flex-col w-1/20 p-4 items-center">
-      <Link href={"/"}>
+    <nav className="bg-[#006241] flex flex-col md:w-1/20 p-4 items-center">
+      <Link href={"/"} className="w-12 h-12">
         <Image src={BearPaw} alt="Logo"></Image>
       </Link>
-      <div className="flex flex-col items-center mt-10  gap-8 text-xl text-black">
+      <div className="flex flex-col items-center mt-10 gap-8 text-xl text-black">
         {/**Options*/}
-        <Link href={"/search"}>
-          <FontAwesomeIcon icon={faSearch}></FontAwesomeIcon>
+        <Link href={"/search"} className="">
+          <FontAwesomeIcon
+            icon={faSearch}
+            className="w-12 h-12"
+          ></FontAwesomeIcon>
         </Link>
         <Link href={"/contacts"}>
-          <FontAwesomeIcon icon={faAddressBook}></FontAwesomeIcon>
+          <FontAwesomeIcon
+            icon={faAddressBook}
+            className="w-12 h-12"
+          ></FontAwesomeIcon>
         </Link>
         <Link href={"/messages"}>
-          <FontAwesomeIcon icon={faMessage}></FontAwesomeIcon>
+          <FontAwesomeIcon
+            icon={faMessage}
+            className="w-12 h-12"
+          ></FontAwesomeIcon>
         </Link>
         <Link href={"/calls"}>
-          <FontAwesomeIcon icon={faPhoneVolume}></FontAwesomeIcon>
+          <FontAwesomeIcon
+            icon={faPhoneVolume}
+            className="w-12 h-12"
+          ></FontAwesomeIcon>
         </Link>
         <Link href={"/settings"}>
-          <FontAwesomeIcon icon={faSliders}></FontAwesomeIcon>
+          <FontAwesomeIcon
+            icon={faSliders}
+            className="w-12 h-12"
+          ></FontAwesomeIcon>
         </Link>
       </div>
       <div className="mt-auto">
