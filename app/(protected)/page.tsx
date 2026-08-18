@@ -24,7 +24,7 @@ export default async function Home() {
   }
 
   return (
-    <div className="flex flex-col p-4 flex-1 items-center justify-center font-sans bg-[#1c2626] gap-8 h-full lg:w-full border">
+    <div className="flex flex-col p-4 flex-1 items-center justify-center font-sans bg-[#1c2626] gap-8 h-full lg:w-full">
       <div>
         <h1 className="text-3xl md:text-4xl">Welcome, {profile?.username}</h1>
         <h1 className="md:text-xl text-md">
